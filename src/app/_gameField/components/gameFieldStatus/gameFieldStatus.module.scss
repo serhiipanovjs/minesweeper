@@ -1,0 +1,57 @@
+.game_field_header_wrapper {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  padding: 5px 0;
+
+  .game_field_header_container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+
+    .opponent_status {
+      position: absolute;
+      color: red;
+      font-size: 14px;
+      font-weight: bold;
+      bottom: 0;
+      right: 10px;
+    }
+
+    .time_block {
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .return_block {
+
+    }
+  }
+}
+
+.game_field_statuses_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

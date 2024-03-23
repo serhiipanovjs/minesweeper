@@ -1,0 +1,23 @@
+.secondary_button_wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 15px 30px;
+  color: blue;
+  width: 100%;
+  max-width: 450px;
+  min-width: 150px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.button_rightSideIsActive {
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2) 45%, rgba(0,220,0, 0.8) 55%);
+}
+
+.button_leftSideIsActive {
+  background: linear-gradient(to top left, rgba(255, 255, 255, 0.2) 45%, rgba(0,220,0, 0.8) 55%);
+}

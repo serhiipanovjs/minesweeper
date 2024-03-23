@@ -1,0 +1,84 @@
+.list_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  padding: 20px 5%;
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+
+  .list_container {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    padding-bottom: 20px;
+
+    .list_items_wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      width: fit-content;
+      justify-content: space-between;
+      height: 100%;
+
+      .list_item_container {
+        width: 31%;
+        min-width: 100px;
+        max-width: 280px;
+        background: white;
+        border-radius: 10px;
+        cursor: pointer;
+        height: 29%;
+        margin-bottom: 2%;
+        filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        position: relative;
+        user-select: none;
+        overflow: hidden;
+
+        .card_status {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(35, 213, 171, .8);
+          color: rgb(231, 60, 126);
+          font-weight: bold;
+        }
+
+        .card_close {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: fit-content;
+          color: rgb(231, 60, 126);
+          font-weight: bold;
+          padding: 6px;
+          line-height: 0;
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+
+  .list_actions_container {
+    height: max(70px, 200% - 100vw);
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    .return_button_wrapper {
+      display: flex;
+      width: 70%;
+      justify-content: center;
+    }
+  }
+}
