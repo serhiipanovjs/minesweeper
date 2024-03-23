@@ -11,7 +11,7 @@ export const gameVariantsDefault = [
     width: 14,
     height: 21,
     bombsCount: 44,
-    timerStartValue: 30,
+    timerStartValue: 3000,
   },
   {
     id: 2,

@@ -187,11 +187,13 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     const openedPositionsWithoutBombsForActivePosition = []
     const openedPositionsWithBombsForActivePosition = []
 
+    console.log(rowIndex, columnIndex, "Enter Point")
     if (ifBomb) {
       openedPositionsWithBombsForActivePosition.push({
         ...activePosition,
         count: 10,
       })
+      console.log(rowIndex, columnIndex, "It's bomb")
 
       activePositionPoints = -10
     } else {
@@ -230,7 +232,9 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
         openedPositionsWithoutBombsForActivePosition.push(...positionsWithoutBombAround)
 
         activePositionPoints = 0
+        console.log(rowIndex, columnIndex, "It's Zero")
       } else {
+        console.log(rowIndex, columnIndex, "It's Point")
         openedPositionsWithoutBombsForActivePosition.push({
           ...activePosition,
           count: bombsAroundPosition,
