@@ -246,13 +246,21 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     const activePlayerPoints = points[socketId] + activePositionPoints
     const isGameFinishUpdated = openedPositionsWithoutBombsCount >= ((width * height) - bombsCount) || activePlayerPoints < 0;
 
-    console.log([...openedPositionsWithoutBombs, ...openedPositionsWithoutBombsForActivePosition].reduce((acc, value, index, array) => {
-      const duplicate = array.find(pos => pos.x === value.x && pos.y === value.y )
+    const {result} = [...openedPositionsWithoutBombs, ...openedPositionsWithoutBombsForActivePosition].reduce((acc, value) => {
+      const duplicate = acc.find((pos : any) => pos.x === value.x && pos.y === value.y )
       if (duplicate) {
-        return [...acc, duplicate]
+        return {
+          result: [...acc.result, duplicate],
+          arr: acc.arr,
+        }
       }
-      return acc
-    }, []), "duplicates")
+      return {
+        ...acc,
+        arr: [...acc.arr, value]
+      }
+    }, {arr: [], result: []})
+
+    console.log(result, "duplicates")
 
     const updatedRoom = {
       points: {
