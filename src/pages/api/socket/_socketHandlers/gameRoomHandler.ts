@@ -278,8 +278,7 @@ export const exitFromGameRoom = ({socket, io, CacheRooms}: any) => {
   });
 }
 
-// @ts-ignore
-const bombGenerator = (height: any, width: any, bombsCount: any, startPosition: any, bombsPositions: any = []) => {
+const bombGenerator = (height: any, width: any, bombsCount: any, startPosition: any, bombsPositions: any = []): any => {
   const position = {
     x: Math.round(Math.random() * (width - 1)),
     y: Math.round(Math.random() * (height - 1))
@@ -340,8 +339,13 @@ const bombsCounterAroundPosition = (pointsAround: any, bombsPositions: any) => {
   }, 0)
 }
 
-// @ts-ignore
-const positionsAroundZeroPositions = (width, height, pointsAround, result, bombsPositions, openedPositionsWithoutBombs) => {
+const positionsAroundZeroPositions = (
+  width: any,
+  height: any,
+  pointsAround: any,
+  result: any, bombsPositions: any,
+  openedPositionsWithoutBombs: any
+): any => {
   const pointsAroundGroupOfPoints = pointsAround.reduce((acc: any, pos: any) => {
     const positionAround = positionAroundFinder(pos.x, pos.y, width, height, openedPositionsWithoutBombs)
     const bombsAroundPosition = bombsCounterAroundPosition(positionAround, bombsPositions)
