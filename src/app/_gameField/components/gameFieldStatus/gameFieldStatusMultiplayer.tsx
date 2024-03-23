@@ -78,7 +78,7 @@ export default function GameFieldStatusMultiplayer({gameData, roomId, returnToPr
                         isGameFinish ?
                           <GameFieldStatusWindow
                             title={isTie ? "Tie" : isYouWin ? "You win" : isYouLost ? "Lucky next time" : ''}
-                            description={isOpponentLeft ? "Opponent left" : "Repeat game"}
+                            description={isOpponentLeft ? "Opponent left" : playerIsReady ? "Waiting your opponent" : "Repeat game"}
                           >
                             {
                               isOpponentLeft ?
