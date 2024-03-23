@@ -69,8 +69,8 @@ export default function GameField({
       setLoadingCellToTheField({columnIndex, rowIndex})
       socket.emit("game_room:on_position_open", {
         roomId,
-        columnIndex,
-        rowIndex,
+        columnIndex: 0,
+        rowIndex: 0,
       });
 
     } else if (e.type === 'contextmenu') {

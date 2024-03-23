@@ -167,6 +167,12 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     }
 
     const activePosition = {x: rowIndex, y: columnIndex}
+    const alreadyOpenedPosition = [...openedPositionsWithoutBombs, openedPositionsWithBombs]
+      .find(position => position.x === activePosition.x && position.y === activePosition.y)
+
+    if (alreadyOpenedPosition) {
+      return;
+    }
 
     if (!room.bombsPositions.length) {
       const bombsPositions = bombGenerator(
@@ -187,13 +193,11 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     const openedPositionsWithoutBombsForActivePosition = []
     const openedPositionsWithBombsForActivePosition = []
 
-    console.log(rowIndex, columnIndex, "Enter Point")
     if (ifBomb) {
       openedPositionsWithBombsForActivePosition.push({
         ...activePosition,
         count: 10,
       })
-      console.log(rowIndex, columnIndex, "It's bomb")
 
       activePositionPoints = -10
     } else {
@@ -232,9 +236,7 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
         openedPositionsWithoutBombsForActivePosition.push(...positionsWithoutBombAround)
 
         activePositionPoints = 0
-        console.log(rowIndex, columnIndex, "It's Zero")
       } else {
-        console.log(rowIndex, columnIndex, "It's Point")
         openedPositionsWithoutBombsForActivePosition.push({
           ...activePosition,
           count: bombsAroundPosition,
@@ -245,22 +247,6 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     const openedPositionsWithoutBombsCount = openedPositionsWithoutBombs.length + openedPositionsWithoutBombsForActivePosition.length;
     const activePlayerPoints = points[socketId] + activePositionPoints
     const isGameFinishUpdated = openedPositionsWithoutBombsCount >= ((width * height) - bombsCount) || activePlayerPoints < 0;
-
-    const {result} = [...openedPositionsWithoutBombs, ...openedPositionsWithoutBombsForActivePosition].reduce((acc, value) => {
-      const duplicate = acc.arr.find((pos : any) => pos.x === value.x && pos.y === value.y )
-      if (duplicate) {
-        return {
-          result: [...acc.result, duplicate],
-          arr: acc.arr,
-        }
-      }
-      return {
-        ...acc,
-        arr: [...acc.arr, value]
-      }
-    }, {arr: [], result: []})
-
-    console.log(result, "duplicates")
 
     const updatedRoom = {
       points: {
