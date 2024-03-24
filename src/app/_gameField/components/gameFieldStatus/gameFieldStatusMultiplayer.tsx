@@ -4,6 +4,7 @@ import styles from "./gameFieldStatus.module.scss"
 import GameFieldStatusWindow from "@/app/_gameField/components/gameFieldStatusWindow";
 import SecondaryButton from "../../../../../components/buttons/secondaryButton";
 import Counter from "@/app/_gameField/components/counter";
+import cln from "classnames";
 
 export default function GameFieldStatusMultiplayer({gameData, roomId, returnToPrevPage}: any) {
   const {socket}: any = useSocket()
@@ -20,16 +21,19 @@ export default function GameFieldStatusMultiplayer({gameData, roomId, returnToPr
     return date.toISOString().substring(14, 19);
   }
 
-  const timer = gameData?.points[socket.id] || 0;
-  const playerIsReady = gameData.playersIsReady[socket.id];
-
-  const isOpponentReady = gameData.playersIsReady[gameData.opponentSocketId];
-
+  const timer = gameData.points[socket.id] || 0;
   const opponentTimer = gameData.points[gameData.opponentSocketId] || 0;
-  const isOpponentLeft = gameData.playersLeftTheGame[gameData.opponentSocketId];
-  const isGameFinish = gameData.isGameFinish;
-  const isStartGameCounterIsActive = gameData.startGameCounterIsActive;
-  const isGameStart = gameData.isGameStarted;
+
+  const pointsToChange = gameData.pointsToChange[socket.id] || [];
+  const opponentPointsToChange = gameData.pointsToChange[gameData.opponentSocketId] || [];
+
+  const playerIsReady = !!gameData.playersIsReady[socket.id];
+  const isOpponentReady = !!gameData.playersIsReady[gameData.opponentSocketId];
+
+  const isOpponentLeft = !!gameData.playersLeftTheGame[gameData.opponentSocketId];
+  const isGameFinish = !!gameData.isGameFinish;
+  const isStartGameCounterIsActive = !!gameData.startGameCounterIsActive;
+  const isGameStart = !!gameData.isGameStarted;
 
   const gameReadyToStart = !isGameFinish && !isStartGameCounterIsActive && !isGameStart;
 
@@ -41,7 +45,28 @@ export default function GameFieldStatusMultiplayer({gameData, roomId, returnToPr
     <>
       <div className={styles.game_field_header_wrapper}>
         <div className={styles.game_field_header_container}>
-          <div className={styles.time_block}>{formatSeconds(timer)}</div>
+          <div className={styles.time_block}>
+            {formatSeconds(timer)}
+
+            {
+              pointsToChange.map(({value, createdAt}: any) => {
+                return (
+                  <div
+                    className={cln(
+                      styles.points_block,
+                      styles.points_block_left,
+                      {
+                        [styles.negative_points]: value < 0
+                      }
+                    )}
+                    key={createdAt}
+                  >
+                    {['', '+'][+(value > 0)] + value}
+                  </div>
+                )
+              })
+            }
+          </div>
           <div className={styles.return_block}>
             <PrimaryButton
               text={"Return"}
@@ -50,8 +75,26 @@ export default function GameFieldStatusMultiplayer({gameData, roomId, returnToPr
           </div>
           <div className={styles.time_block}>
             {formatSeconds(opponentTimer)}
-            {!!isOpponentLeft && <p className={styles.opponent_status}>Opponent left</p>}
+            {
+              opponentPointsToChange.map(({value, createdAt}: any) => {
+                return (
+                  <div
+                    className={cln(
+                      styles.points_block,
+                      styles.points_block_right,
+                      {
+                        [styles.negative_points]: value < 0
+                      }
+                    )}
+                    key={createdAt}
+                  >
+                    {['', '+'][+(value > 0)] + value}
+                  </div>
+                )
+              })
+            }
           </div>
+          {isOpponentLeft && <p className={styles.opponent_status}>Opponent left</p>}
         </div>
       </div>
 

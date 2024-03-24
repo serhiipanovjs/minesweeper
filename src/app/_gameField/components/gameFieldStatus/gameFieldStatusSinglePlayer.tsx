@@ -4,6 +4,7 @@ import Counter from "../counter";
 import SecondaryButton from "../../../../../components/buttons/secondaryButton";
 import styles from "./gameFieldStatus.module.scss"
 import GameFieldStatusWindow from "@/app/_gameField/components/gameFieldStatusWindow";
+import cln from "classnames";
 
 export default function GameFieldStatusSinglePlayer({gameData, roomId, returnToPrevPage}: any) {
   const {socket}: any = useSocket()
@@ -27,6 +28,7 @@ export default function GameFieldStatusSinglePlayer({gameData, roomId, returnToP
   const gameReadyToStart = !isGameFinish && !isStartGameCounterIsActive && !isGameStart;
   const isYouWin = isGameFinish && timer >= 0
   const isYouLost = isGameFinish && timer < 0
+  const pointsToChange = gameData.pointsToChange[socket.id] || []
 
   return (
     <>
@@ -38,7 +40,27 @@ export default function GameFieldStatusSinglePlayer({gameData, roomId, returnToP
               onClick={returnToPrevPage}
             />
           </div>
-          <div className={styles.time_block}>{formatSeconds(timer)}</div>
+          <div className={styles.time_block}>
+            {formatSeconds(timer)}
+            {
+              pointsToChange.map(({value, createdAt}: any) => {
+                return (
+                  <div
+                    className={cln(
+                      styles.points_block,
+                      styles.points_block_right,
+                      {
+                        [styles.negative_points]: value < 0
+                      }
+                    )}
+                    key={createdAt}
+                  >
+                    {['', '+'][+(value > 0)] + value}
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
       </div>
 
@@ -53,7 +75,7 @@ export default function GameFieldStatusSinglePlayer({gameData, roomId, returnToP
                 isStartGameCounterIsActive ? <Counter/> :
                   isYouWin || isYouLost ?
                     <GameFieldStatusWindow
-                      title={isYouWin ? "You win" : isYouLost? "Lucky next time" : ""}
+                      title={isYouWin ? "You win" : isYouLost ? "Lucky next time" : ""}
                       description={"Repeat game"}
                     >
                       <SecondaryButton text={"Repeat"} onClick={onReadyButtonClick}/>

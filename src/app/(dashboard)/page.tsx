@@ -47,11 +47,15 @@ export default function Dashboard() {
         points,
         playersIsReady,
         playersLeftTheGame,
-        opponentSocketId,
         isGameFinish,
         isGameStarted,
         startGameCounterIsActive,
-        singlePlayer
+        singlePlayer,
+        opponentSocketId,
+        pointsToChange: {
+          [socket.id]: [],
+          ...(opponentSocketId ? {[opponentSocketId]: []} : {})
+        },
       })
       setActiveComponent("multiplayerGameRoom")
     })
@@ -78,27 +82,79 @@ export default function Dashboard() {
         points,
         playersIsReady,
         playersLeftTheGame,
-        opponentSocketId: '',
         isGameFinish,
         isGameStarted,
         startGameCounterIsActive,
-        singlePlayer
+        singlePlayer,
+        opponentSocketId: '',
+        pointsToChange: {
+          [socket.id]: []
+        },
       })
       setActiveComponent("singlePlayerGameRoom")
     })
 
 
-    socket.on('game_room:on_position_open_result', ({result, points, isGameFinish}: any) => {
+    socket.on('game_room:on_position_open_result', ({result, points, isGameFinish, pointsToChange = {}}: any) => {
       setField((field: any) => {
         const fieldCopy = [...field]
-        result.forEach((ss: any) => fieldCopy[ss.y][ss.x] = ss.count)
+        result.forEach((position: any) => fieldCopy[position.y][position.x] = position.count)
         return fieldCopy
       })
-      setGameData((gameData: any) => ({
-        ...gameData,
-        points,
-        isGameFinish
-      }))
+
+      setGameData((gameData: any) => {
+        const changeNumber = pointsToChange[socket.id];
+        const filteredPoints = (gameData.pointsToChange[socket.id] || [])
+          .filter((point: any) => point.createdAt + 1000 > Date.now())
+        if (changeNumber) {
+          const changedPoints = {
+            [socket.id]: [
+              ...filteredPoints,
+              {value: changeNumber, createdAt: Date.now()}
+            ]
+          }
+
+          return {
+            ...gameData,
+            points,
+            isGameFinish,
+            pointsToChange: {
+              ...gameData.pointsToChange,
+              ...changedPoints
+            },
+          }
+        }
+
+        if (!gameData.singlePlayer) {
+          const opponentChangeNumber = pointsToChange[gameData.opponentSocketId];
+          const filteredPoints = (gameData.pointsToChange[gameData.opponentSocketId] || [])
+            .filter((point: any) => point.createdAt + 5000 > Date.now())
+          if (opponentChangeNumber) {
+            const changedPoints = {
+              [gameData.opponentSocketId]: [
+                ...filteredPoints,
+                {value: opponentChangeNumber, createdAt: Date.now()}
+              ]
+            }
+
+            return {
+              ...gameData,
+              points,
+              isGameFinish,
+              pointsToChange: {
+                ...gameData.pointsToChange,
+                ...changedPoints
+              },
+            }
+          }
+        }
+
+        return {
+          ...gameData,
+          points,
+          isGameFinish,
+        }
+      })
     })
     socket.on('game_room:ready_status_changed', (playersIsReady: any) => {
       setGameData((gameData: any) => ({
@@ -157,8 +213,8 @@ export default function Dashboard() {
   const setLoadingCellToTheField = ({columnIndex, rowIndex}: any) => {
     setField((field: any) => {
       const fieldCopy = [...field]
-        fieldCopy[columnIndex][rowIndex] = 13
-        return fieldCopy
+      fieldCopy[columnIndex][rowIndex] = 13
+      return fieldCopy
     })
   }
 

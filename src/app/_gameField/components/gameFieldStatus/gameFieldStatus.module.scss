@@ -31,14 +31,49 @@
     }
 
     .time_block {
+      position: relative;
       font-weight: bold;
       font-size: 20px;
       color: white;
+      min-width: 60px;
+
+      .points_block {
+        position: absolute;
+        top: 100%;
+        opacity: 1;
+        animation-name: pointsAnimation;
+        animation-duration: 500ms;
+        animation-fill-mode: forwards;
+        color: green;
+      }
+
+      .points_block_right {
+        right: 0;
+      }
+
+      .points_block_left {
+        left: 0;
+      }
+
+      .negative_points {
+        color: red;
+      }
     }
 
     .return_block {
 
     }
+  }
+}
+
+@keyframes pointsAnimation {
+  0% {
+    top: 100%;
+    opacity: 1;
+  }
+  100% {
+    top: 0;
+    opacity: 0;
   }
 }
 

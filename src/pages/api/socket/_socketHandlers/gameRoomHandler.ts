@@ -248,13 +248,15 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     const activePlayerPoints = points[socketId] + activePositionPoints
     const isGameFinishUpdated = openedPositionsWithoutBombsCount >= ((width * height) - bombsCount) || activePlayerPoints < 0;
 
+    const pointsToChange = {[socketId]: activePositionPoints}
+
     const updatedRoom = {
       points: {
         ...points,
-        [socketId]: activePlayerPoints
+        [socketId]: activePlayerPoints,
       },
       isGameFinish: isGameFinishUpdated,
-      isGameStarted: !isGameFinishUpdated
+      isGameStarted: !isGameFinishUpdated,
     }
 
     CacheRooms.set(roomId, {
@@ -267,11 +269,13 @@ export const onPositionOpened = ({socket, io, CacheRooms}: any) => {
     if (singlePlayer) {
       socket.emit("game_room:on_position_open_result", {
         ...updatedRoom,
+        pointsToChange,
         result: [...openedPositionsWithoutBombsForActivePosition, ...openedPositionsWithBombsForActivePosition],
       });
     } else {
       io.to(roomId).emit("game_room:on_position_open_result", {
         ...updatedRoom,
+        pointsToChange,
         result: [...openedPositionsWithoutBombsForActivePosition, ...openedPositionsWithBombsForActivePosition],
       });
     }
